@@ -1,6 +1,7 @@
 # 사용자에 관련된 기능을 수행하는 파일
 # 메쏘드를 만들 때, get/post/put/patch/delete로 만들면, 알아서 메쏘드로 세팅되도록
 
+from ssl import AlertDescription
 from flask_restful import Resource, reqparse
 from flask_restful_swagger_2 import swagger
 
@@ -164,7 +165,18 @@ class User(Resource):
     def put(self):
         """회원가입"""
         
-        args = put_parser.parse_args()
+        args = put_parser.parse_args()   
+        
+        # 이미 사용중인 이메일이면 400으로 리턴처리
+        already_email_used = Users.query\
+            .filter(Users.email == args['email'])\
+            .first()
+            
+        if already_email_used:
+            return{
+                'code' : 400,
+                'message' : '이미 사용중인 이메일입니다.'
+            }, 400
         
         # 파라미터들을 가지고, users테이블의 row로 추가해보자 (INSERT INO -> ORM개념인 SQLAlchemy로)
         
