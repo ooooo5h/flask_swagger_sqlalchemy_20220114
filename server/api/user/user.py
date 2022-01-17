@@ -112,7 +112,7 @@ class User(Resource):
             # searched_users_list = [ Users(user).get_data_object() for user in users_by_name ] 
             # >>>>> Users(user) 안해도 되네.. 그 이유가 뭐지
             # JSON으로 내려갈 수 있는 dict형태로 목록을 변환시킴
-            searched_users_list = [ user.get_data_object() for user in users_by_name ] 
+            searched_users_list = [ user.get_data_object(need_feeds=True) for user in users_by_name ] 
             
             return {
                 'code' : 200,

@@ -39,7 +39,7 @@ class Users(db.Model):
         } 
         
         if need_feeds:
-            data['my_feeds'] = [feed.get_data_object() for feed in self.my_feeds]
+            data['my_feeds'] = [feed.get_data_object(need_writer=False) for feed in self.my_feeds]
         
         # print(f"내 게시글들 :  {self.my_feeds}")
         
