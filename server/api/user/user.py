@@ -92,13 +92,18 @@ class User(Resource):
             .filter(Users.email == args['email'])\
             .filter(Users.password == args['password'])\
             .first()  # 쿼리 수행 결과중 첫줄
-        
-        # 일치하는 사람이 없다면 login_user에 None이 대입됨
-        print('로그인 유저 : ', login_user)
 
-        return {
-            '임시' : '로그인 기능'
-        }
+        if login_user :
+            return{
+                'code' : 200,
+                'message' : '로그인 성공',
+            }
+        else :
+            return{
+                'code' : 400,
+                'message' : '로그인 실패',
+            }, 400
+
     
     
     @swagger.doc({
