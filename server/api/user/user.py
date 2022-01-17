@@ -39,10 +39,23 @@ class User(Resource):
   
         
     @swagger.doc({
-        'tags' : ['user'],  # 어떤 종류의 기능인지 분류
+        'tags' : ['user'], 
         'description' : '로그인',
         'parameters' : [
-            # dict로 파라미터들 명시
+            {
+                'name' : 'email',
+                'description' : '로그인에 사용할 이메일 주소',
+                'in' : 'formData',  # 문서를 작성할때는 query/formData중에서 택일 (header도 향후 사용할 예정)
+                'type' : 'string',  # str아니라 string으로 기재( string/integer/number(float)/boolean 중 택일 (file도 향후 사용할 예정))
+                'required' : True,  # 필수 첨부 여부
+            },
+            {
+                'name' : 'password',
+                'description' : '로그인에 사용할 비밀번호',
+                'in' : 'formData',  
+                'type' : 'string',  
+                'required' : True,  
+            },           
         ],
         'responses' : {
             # 200일때의 응답 예시, 400일때의 예시 등
@@ -70,13 +83,12 @@ class User(Resource):
     
     
     @swagger.doc({
-        'tags' : ['user'],  # 어떤 종류의 기능인지 분류
+        'tags' : ['user'],  
         'description' : '회원가입',
         'parameters' : [
             # dict로 파라미터들 명시
         ],
         'responses' : {
-            # 200일때의 응답 예시, 400일때의 예시 등
             '200' : {
                 'description' : '회원가입 성공!',
             },
