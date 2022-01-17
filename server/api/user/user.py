@@ -173,6 +173,12 @@ class User(Resource):
         db.session.commit()
 
         return {
-            '임시' : '회원가입 기능'
+            'code' : 200,
+            'message' : '회원가입 성공',
+            'data' : {
+                'user' : new_user.get_data_object()
+            }
         }
+    
+
     
