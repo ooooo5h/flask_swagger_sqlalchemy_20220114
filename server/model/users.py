@@ -17,4 +17,12 @@ class Users(db.Model):
     
     
     # 3. 객체를 가지고 실제 dict로 변환해주는 메쏘드 생성(응답을 내려주는 용도)
-    pass
+    def get_data_object(self):
+        data = {
+            'id' : self.id,
+            'email' : self.email,
+            'name' : self.name,
+            'phone_num' : self.phone,
+        } 
+        
+        return data

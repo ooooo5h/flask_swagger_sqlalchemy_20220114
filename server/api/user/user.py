@@ -94,9 +94,13 @@ class User(Resource):
             .first()  # 쿼리 수행 결과중 첫줄
 
         if login_user :
+            # 로그인에 성공한 사용자의 데이터도 내려주자
             return{
                 'code' : 200,
                 'message' : '로그인 성공',
+                'data' : {
+                    'user' : login_user.get_data_object()
+                }
             }
         else :
             return{
