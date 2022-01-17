@@ -1,6 +1,5 @@
 # 사용자에 관련된 기능을 수행하는 파일
 # 메쏘드를 만들 때, get/post/put/patch/delete로 만들면, 알아서 메쏘드로 세팅되도록
-from base64 import decodebytes
 import datetime
 
 from flask_restful import Resource, reqparse
