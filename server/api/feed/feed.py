@@ -68,3 +68,25 @@ class Feed(Resource):
                 'feed' : new_feed.get_data_object()
             }
         }
+
+    @swagger.doc({
+        'tags' : ['feed'],  
+        'description' : '게시글 목록 조회하기',
+        'parameters' : [
+           
+        ],
+        'responses' : {            
+            '200' : {
+                'description' : '게시글 목록 조회 성공!',
+            },
+            '400' : {
+                'description' : '게시글 조회 실패!'
+            }
+        }
+    })          
+    def get(self):
+        """모든 게시글을 최신순으로 조회"""
+        return {
+            'code' : 200,
+            'message' : '모든 게시글 조회'
+        }
