@@ -97,8 +97,18 @@ class User(Resource):
             # 어허라.. 쿼리의 조건에서 LIKE 활용 방법을 알아야겠군
             users_by_name = Users.query.filter(Users.name.like(f"%{args['name']}%")).all()
             
-            print(users_by_name)
+            # searched_users_list = [ Users(user).get_data_object() for user in users_by_name ] 
+            # >>>>> Users(user) 안해도 되네.. 그 이유가 뭐지
+            # JSON으로 내려갈 수 있는 dict형태로 목록을 변환시킴
+            searched_users_list = [ user.get_data_object() for user in users_by_name ] 
             
+            return {
+                'code' : 200,
+                'message' : '이름으로 사용자 검색 성공',
+                'data' : {
+                    'users' : searched_users_list,
+                }
+            }
         
         
         return {
