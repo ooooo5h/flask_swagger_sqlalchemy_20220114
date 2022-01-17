@@ -12,6 +12,15 @@ post_parser = reqparse.RequestParser() # post로 들어오는 파라미터를 �
 post_parser.add_argument('email', type=str, required=True, location='form')  # 파라미터의 이름/데이터 타입/필수여부/첨부된 곳을 기재해주면 파라미터를 자동으로 가져옴
 post_parser.add_argument('password', type=str, required=True, location='form')
 
+# put메쏘드(회원가입)에서 사용할 4가지 파라미터를 추가해보세요
+# 변수명은 put_parser에 email, password, name, phone 4가지를 받아주고 전부 string
+# put메쏘드에서 실제로 받아서 로그인처럼 로그로만 출력해보자
+# swagger문서작업도 진행해보기
+put_parser = reqparse.RequestParser()
+put_parser.add_argument('email', type=str, required=True, location='form')
+put_parser.add_argument('password', type=str, required=True, location='form')
+put_parser.add_argument('name', type=str, required=True, location='form')
+put_parser.add_argument('phone', type=str, required=True, location='form')
 
 class User(Resource):
     
@@ -86,7 +95,34 @@ class User(Resource):
         'tags' : ['user'],  
         'description' : '회원가입',
         'parameters' : [
-            # dict로 파라미터들 명시
+            {
+                'name' : 'email',
+                'description' : '회원가입에 사용할 이메일 주소',
+                'in' : 'formData',  
+                'type' : 'string',  
+                'required' : True,                     
+            },
+            {
+                'name' : 'password',
+                'description' : '회원가입에 사용할 비밀번호',
+                'in' : 'formData',  
+                'type' : 'string',  
+                'required' : True,                     
+            },
+            {
+                'name' : 'name',
+                'description' : '사용자 본명',
+                'in' : 'formData',  
+                'type' : 'string',  
+                'required' : True,                     
+            },
+            {
+                'name' : 'phone',
+                'description' : '아이디 찾기에 사용할 연락처',
+                'in' : 'formData',  
+                'type' : 'string',  
+                'required' : True,                     
+            },                                          
         ],
         'responses' : {
             '200' : {
@@ -99,6 +135,13 @@ class User(Resource):
     })        
     def put(self):
         """회원가입"""
+        
+        args = put_parser.parse_args()
+        print(f"이메일 : {args['email']}")
+        print(f"비밀번호 : {args['password']}")
+        print(f"이름 : {args['name']}")
+        print(f"연락처 : {args['phone']}")
+        
         return {
             '임시' : '회원가입 기능'
         }
