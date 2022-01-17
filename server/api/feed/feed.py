@@ -1,6 +1,9 @@
 from flask_restful import Resource, reqparse
 from flask_restful_swagger_2 import swagger
 
+from server import db
+from server.model import Feeds
+
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('user_id', type=int, required=True, location='form')
 post_parser.add_argument('lecture_id', type=int, required=True, location='form')
