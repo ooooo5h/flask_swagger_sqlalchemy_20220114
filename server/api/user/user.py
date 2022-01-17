@@ -1,9 +1,10 @@
 # 사용자에 관련된 기능을 수행하는 파일
 # 메쏘드를 만들 때, get/post/put/patch/delete로 만들면, 알아서 메쏘드로 세팅되도록
 
-from urllib import request
 from flask_restful import Resource, reqparse
 from flask_restful_swagger_2 import swagger
+
+from server.model import Users  # users테이블에 연결한 클래스를 가져오기
 
 # 각각의 메쏘드 별로 파라미터를 받아보자
 
@@ -81,10 +82,12 @@ class User(Resource):
         
         # 받아낸 파라미터들을 dict 변수에 담아두자
         args = post_parser.parse_args()
-        
-        # 이메일,비밀번호를 받아왔으면 확인해보자
-        print(f"이메일 : {args['email']}")
-        print(f"비밀번호 : {args['password']}")
+
+
+        # email이 동일한 사람이 있는지 찾아보자 => (SELECT문 사용)
+
+        first_user = Users.query.first()
+        print('첫번째 사용자 : ', first_user)
         
         return {
             '임시' : '로그인 기능'
