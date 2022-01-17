@@ -37,7 +37,7 @@ delete_parser.add_argument('user_id', type=int, required=True, location='args')
 
 # patch메쏘드에서 사용할 파라미터
 patch_parser = reqparse.RequestParser()
-patch_parser.add_argument('usre_id', type=int, required=True, location='form')
+patch_parser.add_argument('user_id', type=int, required=True, location='form')
 patch_parser.add_argument('field', type=str, required=True, location='form')
 patch_parser.add_argument('value', type=str, required=True, location='form')
 
@@ -393,6 +393,12 @@ class User(Resource):
         
         args = patch_parser.parse_args()
         
+        if args['field'] == 'name':
+            pass
+        elif args['field'] == 'phone':
+            pass
+        
         return{
-            '임시' : '회원정보 수정 임시'
-        }
+            'code' : 400,
+            'message' : '필드 항목은 name / phone중 하나만 입력하세요.'
+        }, 400
