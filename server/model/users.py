@@ -15,6 +15,8 @@ class Users(db.Model):
     name = db.Column(db.String(20), nullable=False)
     phone = db.Column(db.String(15))  # nullable의 기본값은 null허용이라서 nullable=False의 경우만 기재해줘도 됨
     
+    birth_year = db.Column(db.Integer, nullable=False, default=1995)    
+
     
     # 3. 객체를 가지고 실제 dict로 변환해주는 메쏘드 생성(응답을 내려주는 용도)
     def get_data_object(self):
@@ -22,7 +24,8 @@ class Users(db.Model):
             'id' : self.id,
             'email' : self.email,
             'name' : self.name,
-            'phone_num' : self.phone,
+            'phone' : self.phone,
+            'birth_year' : self.birth_year
         } 
         
         return data
