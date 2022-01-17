@@ -1,3 +1,4 @@
+from ast import arg
 from flask_restful import Resource, reqparse
 from flask_restful_swagger_2 import swagger
 
@@ -51,7 +52,19 @@ class Feed(Resource):
         
         args = post_parser.parse_args()
         
+        new_feed = Feeds()
+        new_feed.user_id = arg['user_id']
+        new_feed.lecture_id = arg['lecture_id']
+        new_feed.content = arg['content']
         
+        db.session.add(new_feed)
+        db.session.commit()     
+        
+        # commit시점 이후에는, DB에 등록이 완료 => new_feed의 id/created_at등의 자동 등록 데이터도 모두 설정 완료
         return {
-            '임시' : '게시글 등록'
+            'code' : 200,
+            'message' : '게시글 등록 성공',
+            'data' : {
+                # 'feed' : new_feed.get
+            }
         }
