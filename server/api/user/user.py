@@ -178,6 +178,24 @@ class User(Resource):
                 'message' : '이미 사용중인 이메일입니다.'
             }, 400
         
+        # 이미 사용중인 연락처라면, 가입을 불허  =>> 이 코드가 안되는 이유 : 위에서 있으면 return으로 코드를 종료했으니 아래의 코드를 실행할 수 없음
+        # if already_email_used.phone == args['phone']:
+        #     return{
+        #         'code' : 400,
+        #         'message' : '이미 사용중인 연락처'
+        #     }, 400
+        
+        already_phone_user = User.query\
+            .filter(Users.phone == args['phone'])\
+            .first()
+                
+        if already_phone_user:
+            return{
+                'code' : 400,
+                'message' : '이미 사용중인 연락처',
+            }, 400
+        
+        
         # 파라미터들을 가지고, users테이블의 row로 추가해보자 (INSERT INO -> ORM개념인 SQLAlchemy로)
         
         # 객체지향 : 새로운 데이터를 추가한다? => 새 인스턴스를 만든다라는 뜻
