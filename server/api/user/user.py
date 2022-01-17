@@ -35,6 +35,13 @@ get_parser.add_argument('name', type=str, required=False, location='args')
 delete_parser = reqparse.RequestParser()
 delete_parser.add_argument('user_id', type=int, required=True, location='args')
 
+# patch메쏘드에서 사용할 파라미터
+patch_parser = reqparse.RequestParser()
+patch_parser.add_argument('usre_id', type=int, required=True, location='form')
+patch_parser.add_argument('field', type=str, required=True, location='form')
+patch_parser.add_argument('value', type=str, required=True, location='form')
+
+
 class User(Resource):
     
     @swagger.doc({
@@ -363,6 +370,13 @@ class User(Resource):
             'type' : 'string',    # name / phone 둘 중 하나로 입력받자
             'required' : True,
         },
+        {
+            'name' : 'value',
+            'description' : '어떤 값으로 변경할지?',
+            'in' : 'formData',
+            'type' : 'string',    
+            'required' : True,
+        },
     ],
         'responses' : {
             '200' : {
@@ -375,6 +389,9 @@ class User(Resource):
     })
     def patch(self):
         """회원정보 수정"""
+        
+        args = patch_parser.parse_args()
+        
         return{
             '임시' : '회원정보 수정 임시'
         }
