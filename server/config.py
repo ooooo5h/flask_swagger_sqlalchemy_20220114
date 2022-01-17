@@ -12,6 +12,9 @@ class Config(object):
     # SQLALCHEMY_DATABASE_URI = "mysql+pymysql://아이디:비밀번호@DB호스트주소/논리DB이름"
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://admin:admin123"+\
                             "@my-first-db2.ckcb9pt3t4a9.ap-northeast-2.rds.amazonaws.com/my_sns"
+                            
+    # DB변경사항을 추적하는 기능 임시로 꺼두기
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     
 
 class ProductionConfig(Config):
