@@ -250,7 +250,7 @@ class User(Resource):
         #         'message' : '이미 사용중인 연락처'
         #     }, 400
         
-        already_phone_user = User.query\
+        already_phone_user = Users.query\
             .filter(Users.phone == args['phone'])\
             .first()
                 
