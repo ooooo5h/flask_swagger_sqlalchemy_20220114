@@ -28,6 +28,7 @@ put_parser.add_argument('phone', type=str, required=True, location='form')
 # get메쏘드에서 사용할 파라미터
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('email', type=str, required=False, location='args')
+get_parser.add_argument('name', type=str, required=False, location='args')
 
 class User(Resource):
     
@@ -38,6 +39,13 @@ class User(Resource):
             {
                 'name': 'email',
                 'description': '검색해볼 이메일 - 완전히 맞는 이메일만 찾아줌',
+                'in': 'query',
+                'type': 'string',
+                'required': False
+            },
+            {
+                'name': 'name',
+                'description': '검색해볼 이름 - 일부분만 일치해도 찾아줌',
                 'in': 'query',
                 'type': 'string',
                 'required': False
@@ -82,6 +90,17 @@ class User(Resource):
                 }, 400
 
         # 2. 이름이 파라미터로 왔다면 -> 경진 => 조경진도 리턴. LIKE
+        
+        if args['name'] : 
+            # 이메일은 첨부가 안되어있어야함!! 첨부되어있다면, 위의 if문으로 들어가니까
+            # ex. '경' => 조경진/박진경 등 여러 경우가 결과로 나올 수 있다.  == > 검색결과가 1개가 아닌 여러개! => all()
+            # 어허라.. 쿼리의 조건에서 LIKE 활용 방법을 알아야겠군
+            users_by_name = Users.query.filter(Users.name.like(f"%{args['name']}%")).all()
+            
+            print(users_by_name)
+            
+        
+        
         return {
             '임시' : '사용자 정보 조회'
         }
