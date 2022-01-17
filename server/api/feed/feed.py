@@ -86,7 +86,16 @@ class Feed(Resource):
     })          
     def get(self):
         """모든 게시글을 최신순으로 조회"""
+        
+        feed_data_arr = Feeds.query.all()
+        
+        feeds = [ row.get_data_object() for row in feed_data_arr]
+        
+        
         return {
             'code' : 200,
-            'message' : '모든 게시글 조회'
+            'message' : '모든 게시글 조회',
+            'data' : {
+                'feeds' : feeds
+            }
         }
