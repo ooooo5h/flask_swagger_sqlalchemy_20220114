@@ -85,18 +85,24 @@ class User(Resource):
         # 받아낸 파라미터들을 dict 변수에 담아두자
         args = post_parser.parse_args()
 
-
-        # email과 비밀번호가 동일한 사람이 있는지 찾아보자 => (SELECT문 + WHERE절 사용)
+        # 1단계 검사 : 이메일 있나?
+        # 통과시 2단계 검사 : 비밀번호도 맞나?
         
-        # 여러단계의 필터를 세팅하고 first() 한번에 호출
-        # filter 함수는 여러 줄 적는 경우가 많다 => \ 이용, 코드를 보기좋게 정리하자
         login_user = Users.query\
             .filter(Users.email == args['email'])\
-            .filter(Users.password == args['password'])\
-            .first()  # 쿼리 수행 결과중 첫줄
-
-        if login_user :
-            # 로그인에 성공한 사용자의 데이터도 내려주자
+            .first()
+            
+        if login_user is None:
+            return{
+                'code' : 400,
+                'message' : '이메일 땡'
+            }, 400
+            
+        # login_user가 실제로 있는 상황
+        # login_user의 password가 실제로 존재한담 => 파라미터의 패스워드를 비교하기만 하면 됨(DB에 추가 쿼리 조회할 필요 없음)
+        
+        if login_user.password == args['password'] :
+            # 이메일이 맞는 사용자 中 비밀번호와 파라미터의 비밀번호도 같다 => 로그인 성공 처리
             return{
                 'code' : 200,
                 'message' : '로그인 성공',
@@ -105,9 +111,10 @@ class User(Resource):
                 }
             }
         else :
+            # 이메일은 맞는 데 비밀번호가 다름
             return{
                 'code' : 400,
-                'message' : '로그인 실패',
+                'message' : '비밀번호 땡',
             }, 400
 
     
