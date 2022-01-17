@@ -21,8 +21,13 @@ class Users(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     retired_at = db.Column(db.DateTime)
     
+    # cf) Feeds테이블에서, Users로 외래키를 들고 연결을 설정한 상태
+    # Users의 입장에서는 Feeds 테이블에서 본인을 참조하는 row들이 여러개가 있을 예정
+    my_feeds = db.relationship('Feeds')
+    
     # 3. 객체를 가지고 실제 dict로 변환해주는 메쏘드 생성(응답을 내려주는 용도)
-    def get_data_object(self):
+    # 사용자 입장에서는 게시글 저오가 항상 필요한건 아님
+    def get_data_object(self, need_feeds=False):
         data = {
             'id' : self.id,
             'email' : self.email,
@@ -30,7 +35,12 @@ class Users(db.Model):
             'phone' : self.phone,
             'birth_year' : self.birth_year,
             'created_at' : str(self.created_at),    # SQLAlchemy의 DateTime은 JSON응답 처리 불가 => str으로 변환해서 리턴
-            'retired_at' : str(self.retired_at) if self.retired_at else None
+            'retired_at' : str(self.retired_at) if self.retired_at else None,
         } 
+        
+        if need_feeds:
+            data['my_feeds'] = [feed.get_data_object() for feed in self.my_feeds]
+        
+        # print(f"내 게시글들 :  {self.my_feeds}")
         
         return data
