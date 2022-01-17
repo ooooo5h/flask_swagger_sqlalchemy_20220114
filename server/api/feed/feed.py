@@ -53,9 +53,9 @@ class Feed(Resource):
         args = post_parser.parse_args()
         
         new_feed = Feeds()
-        new_feed.user_id = arg['user_id']
-        new_feed.lecture_id = arg['lecture_id']
-        new_feed.content = arg['content']
+        new_feed.user_id = args['user_id']
+        new_feed.lecture_id = args['lecture_id']
+        new_feed.content = args['content']
         
         db.session.add(new_feed)
         db.session.commit()     
@@ -65,6 +65,6 @@ class Feed(Resource):
             'code' : 200,
             'message' : '게시글 등록 성공',
             'data' : {
-                # 'feed' : new_feed.get
+                'feed' : new_feed.get_data_object()
             }
         }
