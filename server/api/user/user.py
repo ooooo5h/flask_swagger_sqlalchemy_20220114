@@ -1,5 +1,6 @@
 # 사용자에 관련된 기능을 수행하는 파일
 # 메쏘드를 만들 때, get/post/put/patch/delete로 만들면, 알아서 메쏘드로 세팅되도록
+from base64 import decodebytes
 import datetime
 
 from flask_restful import Resource, reqparse
@@ -393,10 +394,35 @@ class User(Resource):
         
         args = patch_parser.parse_args()
         
+        edit_user = Users.query.filter(Users.id == args['user_id']).first()
+        
+        if not edit_user:
+            return{
+                'code' : 400,
+                'message' : '해당 사용자는 존재하지 않습니다.'
+            }, 400
+            
+        # edit_user에 사용자가 존재한다 
         if args['field'] == 'name':
-            pass
+            edit_user.name = args['value']
+            db.session.add(edit_user)
+            db.session.commit()
+            
+            return {
+                'code' : 200,
+                'message' : '이름 변경에 성공'
+            }
+            
         elif args['field'] == 'phone':
-            pass
+            edit_user.phone = args['value']
+            db.session.add(edit_user)
+            db.session.commit()
+            
+            return {
+                'code' : 200,
+                'message' : '연락처 변경에 성공'
+            }
+
         
         return{
             'code' : 400,
