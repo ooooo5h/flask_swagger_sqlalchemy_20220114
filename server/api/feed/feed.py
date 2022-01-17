@@ -87,7 +87,8 @@ class Feed(Resource):
     def get(self):
         """모든 게시글을 최신순으로 조회"""
         
-        feed_data_arr = Feeds.query.all()
+        # 모든 게시글을 가져올 때, 생성일시의 역순으로 가져와야지 최신순이 됨 => SQL : ORDER BY + DESC => ORM으로는 어떻게 표현할까?
+        feed_data_arr = Feeds.query.order_by(Feeds.created_at.desc()).all()
         
         feeds = [ row.get_data_object() for row in feed_data_arr]
         
