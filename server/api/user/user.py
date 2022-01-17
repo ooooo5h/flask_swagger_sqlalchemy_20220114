@@ -84,9 +84,14 @@ class User(Resource):
         args = post_parser.parse_args()
 
 
-        # email이 동일한 사람이 있는지 찾아보자 => (SELECT문 + WHERE절 사용)
-
-        login_user = Users.query.filter(Users.email == args['email']).first()  # 쿼리 수행 결과중 첫줄
+        # email과 비밀번호가 동일한 사람이 있는지 찾아보자 => (SELECT문 + WHERE절 사용)
+        
+        # 여러단계의 필터를 세팅하고 first() 한번에 호출
+        # filter 함수는 여러 줄 적는 경우가 많다 => \ 이용, 코드를 보기좋게 정리하자
+        login_user = Users.query\
+            .filter(Users.email == args['email'])\
+            .filter(Users.password == args['password'])\
+            .first()  # 쿼리 수행 결과중 첫줄
         
         # 일치하는 사람이 없다면 login_user에 None이 대입됨
         print('로그인 유저 : ', login_user)
