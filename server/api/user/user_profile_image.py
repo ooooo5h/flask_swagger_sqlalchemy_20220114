@@ -1,5 +1,6 @@
 import boto3
 import time
+import os
 
 from flask import current_app
 from flask_restful_swagger_2 import swagger
@@ -71,9 +72,13 @@ class UserProfileImage(Resource):
             new_file_name = f"MySNS_{user_email}_{now}"
             
             # 2 : 확장자를 추출
+            # 파일이름과 확장자 중에서 확장자만 변수에 담기 위해서 이름은 _,로 처리
+            _, file_extension = os.path.splitext(file.filename)  # 원래 올라온 파일 명을 파일이름, 확장자로 분리
+            
+            new_file_name = f"{new_file_name}{file_extension}"
             
             # 최종 경로에는 1 + 2 + S3의 폴더            
-            s3_file_path = f'images/profile_imgs/{file.filename}'   # 올라갈 경로가 만들어짐
+            s3_file_path = f'images/profile_imgs/{new_file_name}'   # 올라갈 경로가 만들어짐
             
             # 파일 본문도 따로 불러내서 저장해보자 => 실제로 S3경로에 업로드하는 데 활용할꺼임
             file_body = file.stream.read()   # 올려줄 파일이 만들어짐
