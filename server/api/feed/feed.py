@@ -89,7 +89,9 @@ class Feed(Resource):
                 
                 # 1 : 파일 이름은 중복을 피해서 재가공
                 # 사용자id 암호화하고, 현재 시간을 숫자로 표현해서 써먹기
-                s3_file_name = f"images/feed_images/MySNS_{사용자ID암호화}_{현재시간숫자값으로}{.확장자}"
+                
+                _, file_extensions = os.path.splitext(image.filename)
+                s3_file_name = f"images/feed_images/MySNS_{hashlib.md5(upload_user.email.encode('utf-8')).hexdigest()}_{round(time.time() * 10000)}{file_extensions}"
                 
                 # 2 : AWS S3에 파일 업로드
                 
