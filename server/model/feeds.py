@@ -25,5 +25,8 @@ class Feeds(db.Model):
         # 이 글의 작성자가 누구인지 알 수 있다면, json을 만들 때마다 자동 첨부되면 편하겠다
         if need_writer:
             data['writer'] = self.writer.get_data_object()
+            
+        # 이 글이 어느 강의에 대해 작성된건지도 첨부하자
+        data['lecture'] = self.lecture.get_data_object()
         
         return data
