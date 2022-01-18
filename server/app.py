@@ -23,13 +23,14 @@ def create_app(config_name):
     api = Api(app, api_spec_url='/api/spec', title='my_server spec', api_version='0.1', catch_all_404s=True)
     
     from server.api.user import User
-    from server.api.lecture import Lecture
+    from server.api.lecture import Lecture, LectureDetail
     from server.api.feed import Feed
 
     
     # api폴더에서 만든 User클래스를 가져다가 /user로 접속 가능하게 등록
     api.add_resource(User, '/user')
     api.add_resource(Lecture, '/lecture')
+    api.add_resource(LectureDetail, '/lecture/<int:lecture_id>')  # /lecture/숫자를 => int로 분석해서 lecture_id에 변수로 담자
     api.add_resource(Feed, '/feed')
     
     # swagger 문서를 자동 생성
