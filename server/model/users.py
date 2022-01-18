@@ -17,6 +17,7 @@ class Users(db.Model):
     phone = db.Column(db.String(15))  # nullable의 기본값은 null허용이라서 nullable=False의 경우만 기재해줘도 됨
     
     birth_year = db.Column(db.Integer, nullable=False, default=1995)    
+    profile_img_url = db.Column(db.String(200))
     # created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now()) # 일반 datetitme.datetime.now()를 하면 현재 작업중인 pc서버의 시간이 기록됨 => DB 현재시간 아님
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     retired_at = db.Column(db.DateTime)
@@ -34,6 +35,7 @@ class Users(db.Model):
             'name' : self.name,
             'phone' : self.phone,
             'birth_year' : self.birth_year,
+            'profile_img_url' : self.profile_img_url,
             'created_at' : str(self.created_at),    # SQLAlchemy의 DateTime은 JSON응답 처리 불가 => str으로 변환해서 리턴
             'retired_at' : str(self.retired_at) if self.retired_at else None,
         } 
