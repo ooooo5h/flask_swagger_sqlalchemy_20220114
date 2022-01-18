@@ -1,6 +1,7 @@
 import boto3
 import time
 import os
+import hashlib # str -> 암호화된 문구로 변경
 
 from flask import current_app
 from flask_restful_swagger_2 import swagger
@@ -69,7 +70,7 @@ class UserProfileImage(Resource):
             user_email = 'test1@test.com' # 임시 이메일
             now = round(time.time() * 10000) # 현재 시간을 적당한 숫자값으로 표현하기 위해서. 중복을 피하기 위한 요소로 활용만 하면 되니까 대충~
             
-            new_file_name = f"MySNS_{user_email}_{now}"
+            new_file_name = f"MySNS_{hashlib.md5(user_email.encode('utf-8')).hexdigest()}_{now}"
             
             # 2 : 확장자를 추출
             # 파일이름과 확장자 중에서 확장자만 변수에 담기 위해서 이름은 _,로 처리
