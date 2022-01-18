@@ -1,3 +1,7 @@
+from distutils.command.config import config
+import boto3
+
+from flask import current_app
 from flask_restful_swagger_2 import swagger
 from flask_restful import Resource, reqparse
 from werkzeug.datastructures import FileStorage  # 파라미터로 파일을 받을 때 필요한 클래스
@@ -40,6 +44,15 @@ class UserProfileImage(Resource):
     })    
     def put(self):
         """사용자 프로필 사진 등록"""       
+        
+        args = put_parser.parse_args()
+        
+        # aws - s3에 어떤 키와 비밀키를 들고 갈지 셋팅해야함
+        # 키값들은 환경설정(config)에 저장해둔 값을 불러와서 사용
+        aws_s3 = boto3.resource('s3',\
+            aws_access_key= current_app.config['AWS_ACCESS_KEY_ID'],\
+            aws_secret_access_key= current_app.config['AWS_SECRET_ACCESS_KEY'] )
+        
         return {
             '임시' : '사용자가 프사를 등록하는 기능'
         }
