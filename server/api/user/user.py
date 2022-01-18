@@ -276,7 +276,8 @@ class User(Resource):
             'code' : 200,
             'message' : '회원가입 성공',
             'data' : {
-                'user' : new_user.get_data_object()
+                'user' : new_user.get_data_object(),
+                'token' : encode_token(new_user),
             }
         }
     
@@ -333,7 +334,8 @@ class User(Resource):
         
         return {
             'code' : 200,
-            'message' : '회원 삭제 수행 완료'
+            'message' : '회원 삭제 수행 완료',
+            
         }
     
 
@@ -406,7 +408,6 @@ class User(Resource):
                 'code' : 200,
                 'message' : '연락처 변경에 성공'
             }
-
         
         return{
             'code' : 400,
