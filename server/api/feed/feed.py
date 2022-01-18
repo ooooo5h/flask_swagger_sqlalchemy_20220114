@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from flask_restful_swagger_2 import swagger
+from werkzeug.datastructures import FileStorage
 
 from server import db
 from server.model import Feeds
@@ -8,6 +9,8 @@ post_parser = reqparse.RequestParser()
 post_parser.add_argument('user_id', type=int, required=True, location='form')
 post_parser.add_argument('lecture_id', type=int, required=True, location='form')
 post_parser.add_argument('content', type=str, required=True, location='form')
+
+post_parser.add_argument('feed_images', type=FileStorage, required=False, location='files', action='append')
 
 class Feed(Resource):
 
@@ -60,6 +63,20 @@ class Feed(Resource):
         db.session.commit()     
         
         # commit시점 이후에는, DB에 등록이 완료 => new_feed의 id/created_at등의 자동 등록 데이터도 모두 설정 완료
+        
+        # 사진 목록을 등록하는 행위는 반드시 commit()으로 id값이 확인 가능하게 된 이후에 작업해야한다
+        
+        # 사진 자체가 첨부되지 않았을 경우도 있으니까, 확인해보고 올리자
+        
+        if args['feed_images']:   # 사진이 파라미터에 첨부되어있나요?
+            
+            for image in args['feed_images']:
+                # 첨부된 사진들을 AWS S3에 올려주기
+                
+                # feed_images라는 테이블에 이 게시글의 사진으로 S3에 올라간 사진 주소를 등록해줘야함
+                pass
+        
+        
         return {
             'code' : 200,
             'message' : '게시글 등록 성공',
