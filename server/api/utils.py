@@ -15,4 +15,4 @@ def encode_token(user):
         {'id' : user.id, 'email' : user.email, 'password' : user.password}, 
         current_app.config['JWT_SECRET'],
         algorithm=current_app.config['JWT_ALGORITHM']
-        ).decode('utf-8')
+        )  # 이 실행 결과가 곧바로 토큰 str로 나옴

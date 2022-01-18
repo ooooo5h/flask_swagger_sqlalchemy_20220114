@@ -5,6 +5,7 @@ import datetime
 from flask_restful import Resource, reqparse
 from flask_restful_swagger_2 import swagger
 
+from server.api.utils import encode_token
 from server.model import Users  # users테이블에 연결한 클래스를 가져오기
 
 from server import db  # DB에 INSERT/UPDATE등의 반영을 하기 위한 변수
@@ -176,7 +177,8 @@ class User(Resource):
                 'code' : 200,
                 'message' : '로그인 성공',
                 'data' : {
-                    'user' : login_user.get_data_object()
+                    'user' : login_user.get_data_object(),
+                    'token' : encode_token(login_user),
                 }
             }
         else :
