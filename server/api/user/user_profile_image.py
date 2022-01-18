@@ -8,6 +8,7 @@ from flask_restful_swagger_2 import swagger
 from flask_restful import Resource, reqparse
 from werkzeug.datastructures import FileStorage  # 파라미터로 파일을 받을 때 필요한 클래스
 
+from server import db
 from server.model import Users
 
 put_parser = reqparse.RequestParser()
@@ -80,7 +81,7 @@ class UserProfileImage(Resource):
             user_email = upload_user.email   # 실제로 업로드하는 사람의 이메일로 변경
             now = round(time.time() * 10000) # 현재 시간을 적당한 숫자값으로 표현하기 위해서. 중복을 피하기 위한 요소로 활용만 하면 되니까 대충~
             
-            new_file_name = f"MySNS_{hashlib.md5(user_email.encode('utf-8')).hexdigest()}_{now}"
+            new_file_name = f"MySNS_{hashlib.md5(user_email.encode('utf-8')).hexdigest()}_{now}"  # MySNS_123456asd_1234.png 처럼 파일명이 완성
             
             # 2 : 확장자를 추출
             # 파일이름과 확장자 중에서 확장자만 변수에 담기 위해서 이름은 _,로 처리
@@ -89,7 +90,7 @@ class UserProfileImage(Resource):
             new_file_name = f"{new_file_name}{file_extension}"
             
             # 최종 경로에는 1 + 2 + S3의 폴더            
-            s3_file_path = f'images/profile_imgs/{new_file_name}'   # 올라갈 경로가 만들어짐
+            s3_file_path = f'images/profile_imgs/{new_file_name}'   # 올라갈 경로가 만들어짐 => S3 내부 최종 경로가 완성됨
             
             # 파일 본문도 따로 불러내서 저장해보자 => 실제로 S3경로에 업로드하는 데 활용할꺼임
             file_body = file.stream.read()   # 올려줄 파일이 만들어짐
@@ -99,6 +100,13 @@ class UserProfileImage(Resource):
             
             # 이 파일을 누구나 볼 수 있게 public으로 허용하는 작업 필요함 , s3_file_path(파일이름을 찾아서)
             aws_s3.ObjectAcl(current_app.config['AWS_S3_BUCKET_NAME'], s3_file_path).put(ACL='public-read')
+            
+            # 사용자의 프로필 사진 경로를 s3_file_path로 저장하기
+            upload_user.profile_img_url = s3_file_path  # DB에 사용자 프사 경로가 저장됨
+            
+            db.session.add(upload_user)
+            db.session.commit()
+            
         
         return {
             'code' : 200,
