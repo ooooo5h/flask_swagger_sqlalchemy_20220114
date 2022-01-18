@@ -11,7 +11,7 @@ class Lectures(db.Model):
     
     teacher = db.relationship('Users')
     
-    def get_data_object(self):
+    def get_data_object(self, need_teacher_info=False):
         data = {
             'id' : self.id,
             'title' : self.title,
@@ -19,6 +19,7 @@ class Lectures(db.Model):
             'teacher_id' : self.teacher_id,    
         }
         
-        data['teacher'] =  self.teacher.get_data_object()
+        if need_teacher_info:
+            data['teacher'] =  self.teacher.get_data_object()
         
         return data
