@@ -1,4 +1,3 @@
-from email.policy import default
 from server import db
 
 class Feeds(db.Model):
