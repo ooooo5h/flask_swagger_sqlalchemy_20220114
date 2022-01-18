@@ -9,7 +9,10 @@ class Lectures(db.Model):
     campus = db.Column(db.String(10), nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     
-    teacher = db.relationship('Users')
+    teacher = db.relationship('Users')  # 강의의 입장에서, 강사를 찾아가자는 것도 가능하다는 의미에서 남겨둠(정석은 아님)
+    # 정석 : 부모가 자식을 여러개 보유하고, 부모를 찾아오게끔 하는 것
+    # 편의 : 자식의 입장에서 부모를 찾아가자
+    feeds = db.relationship('Feeds', backref='lecture')
     
     def get_data_object(self, need_teacher_info=False):
         data = {

@@ -24,7 +24,7 @@ class Users(db.Model):
     
     # cf) Feeds테이블에서, Users로 외래키를 들고 연결을 설정한 상태
     # Users의 입장에서는 Feeds 테이블에서 본인을 참조하는 row들이 여러개가 있을 예정
-    my_feeds = db.relationship('Feeds')
+    my_feeds = db.relationship('Feeds', backref='writer')
     
     # 3. 객체를 가지고 실제 dict로 변환해주는 메쏘드 생성(응답을 내려주는 용도)
     # 사용자 입장에서는 게시글 정보가 항상 필요한건 아님
