@@ -26,7 +26,7 @@ class Users(db.Model):
     my_feeds = db.relationship('Feeds')
     
     # 3. 객체를 가지고 실제 dict로 변환해주는 메쏘드 생성(응답을 내려주는 용도)
-    # 사용자 입장에서는 게시글 저오가 항상 필요한건 아님
+    # 사용자 입장에서는 게시글 정보가 항상 필요한건 아님
     def get_data_object(self, need_feeds=False):
         data = {
             'id' : self.id,

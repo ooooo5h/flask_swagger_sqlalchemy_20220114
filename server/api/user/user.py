@@ -16,10 +16,7 @@ post_parser = reqparse.RequestParser() # post로 들어오는 파라미터를 �
 post_parser.add_argument('email', type=str, required=True, location='form')  # 파라미터의 이름/데이터 타입/필수여부/첨부된 곳을 기재해주면 파라미터를 자동으로 가져옴
 post_parser.add_argument('password', type=str, required=True, location='form')
 
-# put메쏘드(회원가입)에서 사용할 4가지 파라미터를 추가해보세요
-# 변수명은 put_parser에 email, password, name, phone 4가지를 받아주고 전부 string
-# put메쏘드에서 실제로 받아서 로그인처럼 로그로만 출력해보자
-# swagger문서작업도 진행해보기
+# put메쏘드에서 사용할 파라미터
 put_parser = reqparse.RequestParser()
 put_parser.add_argument('email', type=str, required=True, location='form')
 put_parser.add_argument('password', type=str, required=True, location='form')
@@ -88,14 +85,12 @@ class User(Resource):
             user_by_email = Users.query.filter(Users.email == args['email']).first()
 
             if user_by_email:
-                # 검색 성공.
                 return {
                     'code': 200,
                     'message': '이메일로 사용자 검색 성공',
                     'user': user_by_email.get_data_object()
                 }
             else:
-                # 검색 실패.
                 return {
                     'code': 400,
                     'message': '이메일 사용자 검색결과 없음'
@@ -109,8 +104,6 @@ class User(Resource):
             # 어허라.. 쿼리의 조건에서 LIKE 활용 방법을 알아야겠군
             users_by_name = Users.query.filter(Users.name.like(f"%{args['name']}%")).all()
             
-            # searched_users_list = [ Users(user).get_data_object() for user in users_by_name ] 
-            # >>>>> Users(user) 안해도 되네.. 그 이유가 뭐지
             # JSON으로 내려갈 수 있는 dict형태로 목록을 변환시킴
             searched_users_list = [ user.get_data_object(need_feeds=True) for user in users_by_name ] 
             
@@ -120,8 +113,7 @@ class User(Resource):
                 'data' : {
                     'users' : searched_users_list,
                 }
-            }
-        
+            }    
         
         return {
             '임시' : '사용자 정보 조회'
@@ -160,7 +152,6 @@ class User(Resource):
     def post(self):
         """로그인"""
         
-        # 받아낸 파라미터들을 dict 변수에 담아두자
         args = post_parser.parse_args()
 
         # 1단계 검사 : 이메일 있나?
@@ -254,14 +245,7 @@ class User(Resource):
                 'code' : 400,
                 'message' : '이미 사용중인 이메일입니다.'
             }, 400
-        
-        # 이미 사용중인 연락처라면, 가입을 불허  =>> 이 코드가 안되는 이유 : 위에서 있으면 return으로 코드를 종료했으니 아래의 코드를 실행할 수 없음
-        # if already_email_used.phone == args['phone']:
-        #     return{
-        #         'code' : 400,
-        #         'message' : '이미 사용중인 연락처'
-        #     }, 400
-        
+                
         already_phone_user = Users.query\
             .filter(Users.phone == args['phone'])\
             .first()
@@ -334,7 +318,6 @@ class User(Resource):
 
         # db.session.delete(delete_user)  # 누구를 삭제할지 명시.
         # db.session.commit() # 실제 삭제 수행 => 이 사용자의 활동 내역도 다 같이 지워야 정상 동작.
-
 
         # 실무 : 기존 데이터를 임시 데이터로 변경.
         delete_user.name = '탈퇴회원'
