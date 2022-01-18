@@ -11,12 +11,6 @@ from werkzeug.datastructures import FileStorage
 from server import db
 from server.model import Feeds, Users, FeedImages
 
-from server.api.utils import decode_token
-
-# 임시 코드
-token_parser = reqparse.RequestParser()
-token_parser.add_argument('X-Http-Token', type=str, required=True, location='headers')
-
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('user_id', type=int, required=True, location='form')
 post_parser.add_argument('lecture_id', type=int, required=True, location='form')
@@ -69,22 +63,7 @@ class Feed(Resource):
         }
     })    
     def post(self):
-        """게시글 등록"""
-        
-        token_args = token_parser.parse_args()
-        print('받아온 토큰 : ', token_args['X-Http-Token'])
-        
-        user = decode_token(token_args['X-Http-Token'])
-        
-        if user :
-            return {
-                'user' : user.get_data_object(),
-            }
-        else : 
-            return {
-                'user' : None,
-                'message' : '잘못된 토큰이 들어왔습니다.',
-            }, 403
+        """게시글 등록"""        
         
         args = post_parser.parse_args()
         
