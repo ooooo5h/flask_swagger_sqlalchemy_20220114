@@ -3,7 +3,7 @@
 
 from functools import wraps
 import jwt
-from flask import current_app
+from flask import current_app, g  # g: global의 약자. 프로젝트 전역에서 공유할 수 있는 메모 공간
 from flask_restful import reqparse
 
 from server.model import Users
@@ -73,6 +73,11 @@ def token_required(func):
         
         # 3-1. 사용자가 제대로 나왔다면 올바른 토큰으로 간주해서 원래 함수의 내용을 실행하자
         if user:
+            
+            # 만약에 토큰으로 사용자를 찾아냈다면, 데코레이터가 붙어있는 원본 함수에서도 사용자를 가져다 쓰면 편할 것 같다
+            # 전역변수를 이용해서, 사용자를 전달하자
+            g.user = user
+            
             return func(*args, **kwargs)  # 원래 함수 내용을 실행해서 리턴해라
         
         # 3-2. 사용자가 안나왔다면(None), 이유를 막론하고 잘못된 토큰이니까 403으로 에러 리턴
