@@ -1,5 +1,5 @@
-from distutils.command.config import config
 import boto3
+import time
 
 from flask import current_app
 from flask_restful_swagger_2 import swagger
@@ -64,6 +64,12 @@ class UserProfileImage(Resource):
             # 예시. PC카카오톡 파일 전송해서 다운로드하면 보낸 파일이름을 무시하고, Kakao_?????.jpg 등으로 받아짐
             
             # 1 : 파일이름을 재가공
+            
+            user_email = 'test1@test.com' # 임시 이메일
+            now = round(time.time() * 10000) # 현재 시간을 적당한 숫자값으로 표현하기 위해서. 중복을 피하기 위한 요소로 활용만 하면 되니까 대충~
+            
+            new_file_name = f"MySNS_{user_email}_{now}"
+            
             # 2 : 확장자를 추출
             
             # 최종 경로에는 1 + 2 + S3의 폴더            
