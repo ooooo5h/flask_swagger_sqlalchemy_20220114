@@ -5,12 +5,13 @@ class Feeds(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)   # users테이블의 id컬럼으로 가는 외래키
-    lecture_id = db.Column(db.Integer)                  # null이면, 특정 강의에 대한 글이 아님
+    lecture_id = db.Column(db.Integer, db.ForeignKey('lectures.id'))                  # null이면, 특정 강의에 대한 글이 아님
     content = db.Column(db.TEXT, nullable=False)        # TEXT 컬럼 대응
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     
     # 외래키로 설정된 관계를 ORM으로 표현해보자
     writer = db.relationship('Users')
+    lecture = db.relationship('Lectures')
     
     def get_data_object(self, need_writer=True):
         data = {
