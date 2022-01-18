@@ -9,7 +9,7 @@ from flask_restful_swagger_2 import swagger
 from werkzeug.datastructures import FileStorage
 
 from server import db
-from server.model import Feeds, Users
+from server.model import Feeds, Users, FeedImages
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('user_id', type=int, required=True, location='form')
@@ -104,7 +104,7 @@ class Feed(Resource):
                 s3_file_name = f"images/feed_images/MySNS_{encrypted_user_email}_{now_number}{file_extensions}"
                 
                 # 2 : AWS S3에 파일 업로드
-                image_body = image.stream.read()
+                image_body = image.stream.read()  
                 
                 aws_s3\
                     .Bucket(current_app.config['AWS_S3_BUCKET_NAME'])\
@@ -115,7 +115,14 @@ class Feed(Resource):
                     .put(ACL='public-read')
                 
                 # feed_images라는 테이블에 이 게시글의 사진으로 S3에 올라간 사진 주소를 등록해줘야함
-                pass
+                feed_img = FeedImages()
+                feed_img.feed_id = new_feed.id
+                feed_img.img_url = s3_file_name
+                
+                db.session.add(feed_img)
+            
+            # DB에 추가할 객체는 for문을 통해 모두 등록해두고, commit은 for문 외부에서 한번에 몰아서 날리자
+            db.session.commit()  # 1번 실행마다 DB서버에 1회 접근 => for내부에 작성하면 반복적으로 DB서버에 접근한다는 뜻
         
         
         return {
