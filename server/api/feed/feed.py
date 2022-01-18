@@ -11,6 +11,10 @@ from werkzeug.datastructures import FileStorage
 from server import db
 from server.model import Feeds, Users, FeedImages
 
+# 임시 코드
+token_parser = reqparse.RequestParser()
+token_parser.add_argument('X-Http-Token', type=str, required=True, location='headers')
+
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('user_id', type=int, required=True, location='form')
 post_parser.add_argument('lecture_id', type=int, required=True, location='form')
@@ -25,10 +29,10 @@ class Feed(Resource):
         'description' : '게시글 등록하기',
         'parameters' : [
             {
-                'name': 'user_id',
-                'description': '어느 사용자가 작성했나?',
-                'in': 'formData',
-                'type': 'integer',
+                'name': 'X-Http-Token',
+                'description': '어느 사용자인지를 토큰으로',
+                'in': 'header',
+                'type': 'string',
                 'required': True
             },
             {
@@ -64,6 +68,13 @@ class Feed(Resource):
     })    
     def post(self):
         """게시글 등록"""
+        
+        token_args = token_parser.parse_args()
+        print('받아온 토큰 : ', token_args['X-Http-Token'])
+        
+        return {
+            '임시' : '토큰값 확인',
+        }
         
         args = post_parser.parse_args()
         
