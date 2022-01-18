@@ -1,9 +1,15 @@
 # 토큰을 발급하고, 발급된 토큰이 들어오면 사용자가 누구인지 분석하는 등의 기능을 담당하는 파일
 # JWT에 관한 기능을 모아두는 모듈로 만들거임
 
+from functools import wraps
 import jwt
 from flask import current_app
+from flask_restful import reqparse
+
 from server.model import Users
+
+token_parser =reqparse.RequestParser()
+token_parser.add_argument('X-Http-Token', type=str, required=True, location='headers')  # 토큰을 받아오는 parser를 생성함
 
 # 토큰을 만드는 함수를 정의 , 토큰 왜만들어? => 사용자를 인증하는 용도라서, 어떤 사용자에 대한 토큰인지 알아야함
 def encode_token(user):
@@ -46,3 +52,35 @@ def decode_token(token):
     except jwt.exceptions.DecodeError:
         # 잘못된 토큰이 들어오면, 복호화에 실패하기 때문에 => 예외처리를 위해서 이쪽으로 빠짐.
         return None  # 토큰이 잘못됬으니까 사용자도 찾아내지 못했다고 리턴
+    
+    
+# 데코레이터 사용 => 추가함수에 적힌 코드를 먼저 실행하고, 그 다음에 실제 함수를 이어서 진행하도록 하는 기능
+
+# @추가함수 
+# def 함수이름 : 
+
+def token_required(func):
+    
+    @wraps(func)
+    def decorator(*args, **kwargs):   # 어떤 모양의 함수든지 가능하다고 명시함
+        # 실제 함수 내용이 시작되기전에, 먼저 해줄 함수를 적는다
+        
+        # 1. 토큰 파라미터를 받자
+        args = token_parser.parse_args()        
+        
+        # 2. 그 토큰으로 실제 사용자를 추출해보자
+        user = decode_token(args['X-Http-Token'])
+        
+        # 3-1. 사용자가 제대로 나왔다면 올바른 토큰으로 간주해서 원래 함수의 내용을 실행하자
+        if user:
+            return func(*args, **kwargs)  # 원래 함수 내용을 실행해서 리턴해라
+        
+        # 3-2. 사용자가 안나왔다면(None), 이유를 막론하고 잘못된 토큰이니까 403으로 에러 리턴
+        else : 
+            return {
+                'code' : 403,
+                'message' : '올바르지 않은 토큰입니다.'
+            }, 403
+            
+    # token_required이름표가 붙은 함수들에게 decorator라는 함수를 전달해주자
+    return decorator
