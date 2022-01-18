@@ -8,6 +8,8 @@ from flask_restful_swagger_2 import swagger
 from flask_restful import Resource, reqparse
 from werkzeug.datastructures import FileStorage  # 파라미터로 파일을 받을 때 필요한 클래스
 
+from server.model import Users
+
 put_parser = reqparse.RequestParser()
 
 # 파일을 받는 파라미터는 FileStorage, files에서, 추가행동 : append가 필요
@@ -49,6 +51,14 @@ class UserProfileImage(Resource):
         
         args = put_parser.parse_args()
         
+        upload_user = Users.query.filter(Users.id == args['user_id']).first()
+        
+        if upload_user is None :
+            return {
+                'code' : 400,
+                'message' : '해당 사용자는 존재하지 않습니다.'
+            }, 400
+        
         # aws - s3에 어떤 키와 비밀키를 들고 갈지 셋팅해야함
         # 키값들은 환경설정(config)에 저장해둔 값을 불러와서 사용
         aws_s3 = boto3.resource('s3',\
@@ -67,7 +77,7 @@ class UserProfileImage(Resource):
             
             # 1 : 파일이름을 재가공
             
-            user_email = 'test1@test.com' # 임시 이메일
+            user_email = upload_user.email   # 실제로 업로드하는 사람의 이메일로 변경
             now = round(time.time() * 10000) # 현재 시간을 적당한 숫자값으로 표현하기 위해서. 중복을 피하기 위한 요소로 활용만 하면 되니까 대충~
             
             new_file_name = f"MySNS_{hashlib.md5(user_email.encode('utf-8')).hexdigest()}_{now}"
@@ -91,5 +101,9 @@ class UserProfileImage(Resource):
             aws_s3.ObjectAcl(current_app.config['AWS_S3_BUCKET_NAME'], s3_file_path).put(ACL='public-read')
         
         return {
-            '임시' : '사용자가 프사를 등록하는 기능'
+            'code' : 200,
+            'message' : '사용자의 프로필 사진 변경',
+            'data' : {
+                'user' : upload_user.get_data_object()
+            }
         }
