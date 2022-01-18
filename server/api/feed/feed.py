@@ -10,6 +10,7 @@ from werkzeug.datastructures import FileStorage
 
 from server import db
 from server.model import Feeds, Users, FeedImages
+from server.api.utils import token_required
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('user_id', type=int, required=True, location='form')
@@ -62,6 +63,7 @@ class Feed(Resource):
             }
         }
     })    
+    @token_required
     def post(self):
         """게시글 등록"""        
         
