@@ -2,10 +2,11 @@
 # 메쏘드를 만들 때, get/post/put/patch/delete로 만들면, 알아서 메쏘드로 세팅되도록
 import datetime
 
+from flask import g
 from flask_restful import Resource, reqparse
 from flask_restful_swagger_2 import swagger
 
-from server.api.utils import encode_token
+from server.api.utils import encode_token, token_required
 from server.model import Users  # users테이블에 연결한 클래스를 가져오기
 
 from server import db  # DB에 INSERT/UPDATE등의 반영을 하기 위한 변수
@@ -31,7 +32,7 @@ get_parser.add_argument('name', type=str, required=False, location='args')
 
 # delete메쏘드에서 사용할 파라미터
 delete_parser = reqparse.RequestParser()
-delete_parser.add_argument('user_id', type=int, required=True, location='args')
+# delete_parser.add_argument('user_id', type=int, required=True, location='args')
 
 # patch메쏘드에서 사용할 파라미터
 patch_parser = reqparse.RequestParser()
@@ -286,10 +287,10 @@ class User(Resource):
         'description' : '회원 탈퇴',
         'parameters' : [
             {
-                'name' : 'user_id',
-                'description' : '몇 번 사용자를 지울건가요?',
-                'in' : 'query',
-                'type' : 'integer',
+                'name' : 'X-Http-Token',
+                'description' : '본인 인증용 토큰',
+                'in' : 'header',
+                'type' : 'string',
                 'required' : True,
             }
         ],
@@ -302,21 +303,14 @@ class User(Resource):
             }
         }
     })
+    @token_required
     def delete(self):
         """회원 탈퇴"""
      
         args = delete_parser.parse_args()
 
-        # args['user_id'] 를 이용해서 삭제할 사용자가 실존하는지 확인.
-
-        delete_user = Users.query.filter(Users.id == args['user_id']).first()
-
-        if delete_user == None:
-            return {
-                'code': 400,
-                'message': '해당 사용자는 존재하지 않습니다.'
-            }, 400
-
+        delete_user = g.user
+    
         # delete_user에 실제 객체가 들어있다. => 활용하자.
 
         # db.session.delete(delete_user)  # 누구를 삭제할지 명시.
