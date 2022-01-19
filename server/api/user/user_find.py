@@ -77,7 +77,15 @@ class UserFind(Resource):
             'msg' : f"-MySNS 계정안내-\n가입하신 계정은 [{user.email}]입니다.",
         }
         
-        requests.post(url=sms_url, data=send_data)
+        # request의 요청에 대한 결과를 변수에 담자
+        
+        response = requests.post(url=sms_url, data=send_data)
+        
+        # 응답의 본문이 JSON으로 올 예정 => 본문을 json형태로 가공해서 받자
+        respJson = response.json()
+        print('문자 전송 결과 : ', respJson)
+        print('결과 코드', respJson['result_code'])
+        print('결과 메세지', respJson['message'])
            
         return {
             'code' : 200,
