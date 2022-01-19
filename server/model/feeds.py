@@ -12,8 +12,9 @@ class Feeds(db.Model):
     # ORM으로 관계를 표현 할 때 (SQLAlchemy)의 정석은 부모의 입장에서 자식 목록(feedimages)을 갖고 있자
     # backref 값은, 자식 테이블 모델의 입장에서, 본인을 찾아올 때 사용할 변수의 이름을 지정한 것
     feed_images = db.relationship('FeedImages', backref='feed')
+    feed_replies = db.relationship('FeedReplies', backref='feed')   # QQQQQ. 찾아가야하는곳이 다른데, 같은 이름표로 찾아가도 되나..?
     
-    def get_data_object(self, need_writer=True):
+    def get_data_object(self, need_writer=True, need_replies=False):
         data = {
             'id' : self.id,
             'user_id' : self.user_id,
@@ -29,5 +30,9 @@ class Feeds(db.Model):
             
         # 이 글이 어느 강의에 대해 작성된건지도 첨부하자
         data['lecture'] = self.lecture.get_data_object()
+        
+        if need_replies:
+            data['replies'] = [reply.get_data_object() for reply in self.feed_replies]
+        
         
         return data
