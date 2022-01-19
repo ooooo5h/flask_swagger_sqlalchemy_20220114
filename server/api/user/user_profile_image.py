@@ -1,4 +1,3 @@
-from lib2to3.pgen2 import token
 import boto3
 import time
 import os

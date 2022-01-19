@@ -212,7 +212,6 @@ class FeedReply(Resource):
         }
 
 
-
     @swagger.doc({
         'tags' : ['feed/reply'],  
         'description' : '특정 게시글에 달린 댓글 목록 보기',
