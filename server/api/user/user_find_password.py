@@ -1,4 +1,5 @@
 import email
+from venv import create
 import requests
 
 from flask import current_app, g
@@ -85,19 +86,17 @@ class UserPasswordFind(Resource):
         # 어느 사이트(주소) / 메쏘드 / 파라미터 세가지를 세팅해서 requests 모듈 활용하자
         mailgun_url = 'https://api.mailgun.net/v3/mg.gudoc.in/messages'
         email_data = {
-            'from' : 보내는 사람,
-            'to' : 받는 사람,
-            'subject' : '비밀번호 찾기 메일 제목',
+            'from' : 'system@gudoc.in',  # no-reply@웹주소.com
+            'to' : user.email,              # 비밀번호 찾기를 하려는 사용자의 이메일주소
+            'subject' : '[MySNS 비밀번호 안내] 비밀번호 찾기 알림 메일입니다.',
             'text' : '실제 발송 내용',
         }    
         
         requests.post(
             url = mailgun_url,
             data = email_data,
-            auth= ('api', 메일건키값)
+            auth= ('api', current_app.config['MAILGUN_API_KEY'])
         )
-  
-            
 
         return{
             'code' : 200,
