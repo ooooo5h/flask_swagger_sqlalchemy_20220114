@@ -66,8 +66,18 @@ class UserFind(Resource):
         
         # 3 : 파라미터 => 명세서 참조하기
         
-        url = 'https://apis.aligo.in/send/'
+        sms_url = 'https://apis.aligo.in/send/'
         
+        # dict에 들고갈 파라미터에 담을 값들을 미리 세팅해두자
+        send_data = {
+            'key' : current_app.config['ALIGO_API_KEY'],
+            'user_id' : 'cho881020',
+            'sender' : '010-5112-3237',
+            'receiver' : user.phone,
+            'msg' : f"가입하신 계정은 [{user.email}]입니다.",
+        }
+        
+        requests.post(url=sms_url, data=send_data)
            
         return {
             'code' : 200,
