@@ -1,3 +1,4 @@
+import email
 import requests
 
 from flask import current_app, g
@@ -77,6 +78,26 @@ class UserPasswordFind(Resource):
                 'code' : 400,
                 'message' : '개인정보가 맞지 않습니다.'
             }, 400
+            
+        # 메일 전송 경우에는 API 사이트가 mailgun.com이라는 사이트를 활용함
+        # => 도메인 주소를 구매 후 저 사이트에 세팅까지 마친 후에 활용이 가능함
+        
+        # 어느 사이트(주소) / 메쏘드 / 파라미터 세가지를 세팅해서 requests 모듈 활용하자
+        mailgun_url = 'https://api.mailgun.net/v3/mg.gudoc.in/messages'
+        email_data = {
+            'from' : 보내는 사람,
+            'to' : 받는 사람,
+            'subject' : '비밀번호 찾기 메일 제목',
+            'text' : '실제 발송 내용',
+        }    
+        
+        requests.post(
+            url = mailgun_url,
+            data = email_data,
+            auth= ('api', 메일건키값)
+        )
+  
+            
 
         return{
             'code' : 200,
