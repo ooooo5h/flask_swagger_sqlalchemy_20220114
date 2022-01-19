@@ -4,6 +4,7 @@ from flask_restful import Resource, reqparse
 from flask_restful_swagger_2 import swagger
 
 from server import db
+from server.api import user
 from server.model import FeedReplies
 from server.api.utils import token_required
 
@@ -94,6 +95,13 @@ class FeedReply(Resource):
                 'required': True,
             },
             {
+                'name': 'feed_id',
+                'description': '수정해줄 피드의 아이디',
+                'in': 'path',
+                'type': 'integer',
+                'required': True,
+            },             
+            {
                 'name': 'feed_reply_id',
                 'description': '몇번 댓글을 수정할건지',
                 'in': 'formData',
@@ -106,7 +114,8 @@ class FeedReply(Resource):
                 'in': 'formData',
                 'type': 'string',
                 'required': True,
-            },                                       
+            },      
+                                              
         ],
         'responses' : {
             '200' : {
@@ -115,8 +124,28 @@ class FeedReply(Resource):
         }
     })  
     @token_required      
-    def put(self):
+    def put(self, feed_id):
         """댓글 수정"""
+        
+        args = put_parser.parse_args()
+        user = g.user
+        
+        # 기존 댓글을 확인해보기 => 내가 쓴 댓글이 맞는지
+        reply = FeedReplies.query.filter(FeedReplies.id == args['feed_reply_id']).first()
+        
+        if reply.user_id != user.id:
+            # 댓글의 작성자가 내가 아니다
+            return{
+                'code' : 400,
+                'message' : '본인이 쓴 댓글만 수정 가능합니다.'
+            }, 400
+        
+        # 찾아낸 댓글의 content항목을 수정하자
+        reply.content = args['content']
+        
+        # DB의 변경이 생겼으니까
+        db.session.add(reply)
+        db.session.commit()
         
         return {
             'code' : 200,
