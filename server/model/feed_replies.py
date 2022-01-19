@@ -9,6 +9,8 @@ class FeedReplies(db.Model):
     content = db.Column(db.TEXT, nullable=False)      
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     
+    
+    
     def get_data_object(self):
         data = {
             'id' : self.id,
