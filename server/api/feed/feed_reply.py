@@ -1,3 +1,4 @@
+from ast import arg
 from flask import current_app, g
 from flask_restful import Resource, reqparse
 from flask_restful_swagger_2 import swagger
@@ -55,13 +56,22 @@ class FeedReply(Resource):
         
         user = g.user 
         
+        # FeedReplies 객체 생성 -> 데이터 기입 -> db전달
+        new_reply = FeedReplies()
+        
+        new_reply.feed_id = args['feed_id']
+        new_reply.user_id = user.id
+        new_reply.content = args['content']
+        
+        db.session.add(new_reply)
+        db.session.commit()
         
         return {
             'code' : 200,
-            'message' : '임시 - 댓글 등록 성공',
-            # 'data' : {
-            #     'feed' : new_feed.get_data_object()
-            # }
+            'message' : '댓글 등록 성공',
+            'data' : {
+                'feed' : new_reply.get_data_object()
+            }
         }
 
     
