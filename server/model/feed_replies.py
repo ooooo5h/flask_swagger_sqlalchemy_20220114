@@ -17,7 +17,7 @@ class FeedReplies(db.Model):
             'feed_id' : self.feed_id,
             'user_id' : self.user_id,      
             'content' : self.content,
-            'created_at' : self.created_at,
+            'created_at' : str(self.created_at),
             'writer' : self.writer.get_data_object()
         }
         

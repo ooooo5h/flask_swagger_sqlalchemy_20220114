@@ -54,12 +54,21 @@ class FeedReply(Resource):
         args = post_parser.parse_args()
         
         user = g.user # 전역변수에 저장된 토큰에서 뽑아낸 사용자를 변수에 저장
+        
+        # FeedReplies 객체 생성 -> 데이터 기입 -> db에 전달
+        new_reply = FeedReplies()
+        new_reply.feed_id = args['feed_id']
+        new_reply.user_id = user.id
+        new_reply.content = args['content']
+        
+        db.session.add(new_reply)
+        db.session.commit()
             
         
         return {
             'code' : 200,
-            'message' : '임시 - 댓글 등록 성공',
-            # 'data' : {
-            #     'feed' : new_feed.get_data_object()
-            # }
+            'message' : '댓글 등록 성공',
+            'data' : {
+                'feed' : new_reply.get_data_object()
+            }
         }
