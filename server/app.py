@@ -24,7 +24,7 @@ def create_app(config_name):
     
     from server.api.user import User, UserProfileImage
     from server.api.lecture import Lecture, LectureDetail
-    from server.api.feed import Feed
+    from server.api.feed import Feed, FeedReply
 
     
     # api폴더에서 만든 User클래스를 가져다가 /user로 접속 가능하게 등록
@@ -33,6 +33,7 @@ def create_app(config_name):
     api.add_resource(Lecture, '/lecture')
     api.add_resource(LectureDetail, '/lecture/<int:lecture_id>')  # /lecture/숫자를 => int로 분석해서 lecture_id에 변수로 담자
     api.add_resource(Feed, '/feed')
+    api.add_resource(FeedReply, '/feed/reply')
     
     # swagger 문서를 자동 생성
     swagger_ui = get_swaggerui_blueprint('/api/docs', '/api/spec.json', config={'app_name' : 'my sns service'})

@@ -10,7 +10,7 @@ post_parser = reqparse.RequestParser()
 post_parser.add_argument('feed_id', type=int, required=True, location='form')
 post_parser.add_argument('content', type=str, required=True, location='form')
 
-class Feed(Resource):
+class FeedReply(Resource):
 
     @swagger.doc({
         'tags' : ['feed/reply'],  
