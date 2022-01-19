@@ -1,4 +1,5 @@
 from server import db
+from server.model import feed_replies
 
 class Feeds(db.Model):
     __tablename__ = 'feeds'
