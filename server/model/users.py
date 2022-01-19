@@ -68,3 +68,12 @@ class Users(db.Model):
         
         # 입력받은 비밀번호를 md5라는 걸로 변환해보자 => hashlib모듈을 활용하자는 이야기
         return hashlib.md5(input_password.encode('utf8')).hexdigest()
+    
+    # 비밀번호 원문을 받아서, 비밀번호가 맞는지 암호화된 값 끼리 비교해보는 함수
+    def verify_password(self, input_password):
+        
+        # 입력된 비밀번호를 암호화해두자
+        hashed_input_pw = self.generate_password_hash(input_password)
+        
+        # 암호화한 후, 내 암호화된 비밀번호랑 같은지 비교해보자
+        return self.password_hashed == hashed_input_pw
