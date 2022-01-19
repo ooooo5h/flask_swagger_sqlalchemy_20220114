@@ -62,7 +62,7 @@ def decode_token(token):
 def token_required(func):
     
     @wraps(func)
-    def decorator(*args, **kwargs):   # 어떤 모양의 함수든지 가능하다고 명시함
+    def decorator(*args, **kwargs):   # 어떤 모양의 함수든지 가능하다고 명시함  *args=> 몇개의 인자를 입력할 지 모를때, *kwargs => name:'전은형' 이렇게 입력할 때
         # 실제 함수 내용이 시작되기전에, 먼저 해줄 함수를 적는다
         
         # 1. 토큰 파라미터를 받자
