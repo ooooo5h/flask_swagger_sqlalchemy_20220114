@@ -9,6 +9,7 @@ class FeedReplies(db.Model):
     content = db.Column(db.TEXT, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())        
     
+    writer = db.relationship('Users')
         
     def get_data_object(self):
         data = {
@@ -16,7 +17,8 @@ class FeedReplies(db.Model):
             'feed_id' : self.feed_id,
             'user_id' : self.user_id,      
             'content' : self.content,
-            'created_at' : self.created_at
+            'created_at' : self.created_at,
+            'writer' : self.writer.get_data_object()
         }
         
         return data
