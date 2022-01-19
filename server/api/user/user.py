@@ -188,8 +188,7 @@ class User(Resource):
                 'code' : 400,
                 'message' : '비밀번호 땡',
             }, 400
-
-    
+ 
     
     @swagger.doc({
         'tags' : ['user'],  

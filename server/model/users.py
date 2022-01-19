@@ -68,8 +68,7 @@ class Users(db.Model):
         
         # 입력받은 비밀번호를 SHA512로 변환해보자. (맞추기 어렵다/ 길이가 길게 나온다)  1차 암호화
         pre_hashed = hashlib.sha512(input_password.encode('utf8')).hexdigest()
-        
-        
+            
         # 1차 암호화된 결과물을 다시 md5라는 걸로 변환해보자 => hashlib모듈을 활용하자는 이야기
         return hashlib.md5(pre_hashed.encode('utf8')).hexdigest()
     
