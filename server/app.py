@@ -33,7 +33,7 @@ def create_app(config_name):
     api.add_resource(Lecture, '/lecture')
     api.add_resource(LectureDetail, '/lecture/<int:lecture_id>')  # /lecture/숫자를 => int로 분석해서 lecture_id에 변수로 담자
     api.add_resource(Feed, '/feed')
-    api.add_resource(FeedReply, '/feed/reply')
+    api.add_resource(FeedReply, '/feed/<int:feed_id>/reply')
     
     
     # swagger 문서를 자동 생성
