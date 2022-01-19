@@ -1,3 +1,5 @@
+import requests
+
 from flask import current_app, g
 from flask_restful_swagger_2 import swagger
 from flask_restful import Resource, reqparse
@@ -44,6 +46,28 @@ class UserFind(Resource):
         """이메일 찾기 (문자 전송)"""       
         
         args = get_parser.parse_args()
+        
+        user = Users.query\
+            .filter(Users.name == args['name'])\
+            .filter(Users.phone == args['phone'])\
+            .first()
+            
+        if user is None:
+            return {
+                'code' : 400,
+                'message' : '이름과 연락처 둘 다 올바르게 입력하세요.'
+            }, 400
+         
+        # 이름과 연락처가 모두 맞는 사람을 찾았다면, 알리고 사이트의 API에 문자 전송하는 Request를 전송 => requests 모듈 활용 
+        
+        # 1 : 주소가 어디야?  apis.aligo.in/send/ 등의 주소
+        
+        # 2 : 어떤 메쏘드야? POST   
+        
+        # 3 : 파라미터 => 명세서 참조하기
+        
+        url = 'https://apis.aligo.in/send/'
+        
            
         return {
             'code' : 200,
