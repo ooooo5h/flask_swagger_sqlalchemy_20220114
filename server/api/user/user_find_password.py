@@ -80,6 +80,17 @@ class UserPasswordFind(Resource):
                 'message' : '개인정보가 맞지 않습니다.'
             }, 400
             
+        # 메일에 뭐라고 보내줄건지 내용을 작성해보기
+        # 실제 비밀번호를 보내주면 안됨!! 그 뜻은 실제 비밀번호를 사이트 DB에 저장해뒀다는 이야기
+        # 임시 비밀번호를 랜덤으로 설정해서 새 비밀번호로 update하고 메일로 발송해주자
+        send_content = f"""
+        안녕하세요. MySNS입니다.
+        회원님의 비밀번호는 {user.password}입니다.
+        Don't forget
+        """    
+        
+        print(send_content)    
+            
         # 메일 전송 경우에는 API 사이트가 mailgun.com이라는 사이트를 활용함
         # => 도메인 주소를 구매 후 저 사이트에 세팅까지 마친 후에 활용이 가능함
         
@@ -89,15 +100,18 @@ class UserPasswordFind(Resource):
             'from' : 'system@gudoc.in',  # no-reply@웹주소.com
             'to' : user.email,              # 비밀번호 찾기를 하려는 사용자의 이메일주소
             'subject' : '[MySNS 비밀번호 안내] 비밀번호 찾기 알림 메일입니다.',
-            'text' : '실제 발송 내용',
+            'text' : send_content,
         }    
         
-        requests.post(
+        response = requests.post(
             url = mailgun_url,
             data = email_data,
             auth= ('api', current_app.config['MAILGUN_API_KEY'])
         )
 
+        respJson = response.json()
+        print('메일건 응답 : ', respJson)
+        
         return{
             'code' : 200,
             'message' : '비밀번호를 이메일로 전송했습니다.(임시)'
