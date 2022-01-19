@@ -265,7 +265,7 @@ class User(Resource):
         # 객체지향 : 새로운 데이터를 추가한다? => 새 인스턴스를 만든다라는 뜻
         new_user = Users()
         new_user.email = args['email']
-        new_user.password = args['password']
+        new_user.password = args['password']   # password라는 변수에 사용자가 입력하면, 알아서 암호화되서 들어가도록 하고싶다.(뒷단에서 암호화하도록)
         new_user.name = args['name']
         new_user.phone = args['phone']
         
