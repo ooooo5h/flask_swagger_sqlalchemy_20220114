@@ -30,9 +30,14 @@ class AdminDashboard(Resource):
         amount_list = [{'lecture_title' : row[0], 'amount' : int(row[1])} for row in group_by_lecture_fee_amount ]  
         
         
-        # 모든 남성 유저 목록을 출력해보기
-        male_users = Users.query.filter(Users.is_male == True).all()
-        print(male_users)
+        # 남성 회원수와 여성 회원수를 가지고, 그룹지어보자...? 이해 100퍼센트 못했음!!
+        gender_by_user_count_list = db.session.query(Users.is_male, db.func.count(Users.id))\
+            .group_by(Users.is_male)\
+            .all()
+            
+        # 성별에 따른 사용자 수
+        gender_user_counts = [{'is_male' : row[0], 'user_count' : int(row[1])} for row in gender_by_user_count_list]
+        
         
         return {
             'code' : 200,
@@ -40,6 +45,7 @@ class AdminDashboard(Resource):
             'data' : {
                 'live_user_count' : users_count,
                 'group_by_lecture_fee_amount' : amount_list,
+                'gender_by_user_counts' : gender_user_counts,  
             }
         }
         
