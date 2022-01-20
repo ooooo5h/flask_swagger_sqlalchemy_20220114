@@ -1,4 +1,5 @@
 from flask_restful import Resource
+from flask_restful_swagger_2 import swagger
 from server.model import Users, LectureUser, Lectures
 from server import db
 
@@ -6,7 +7,26 @@ import datetime
 
 class AdminDashboard(Resource):
     
+    @swagger.doc({
+        'tags' : ['admin'],
+        'description' : '관리자 - 대쉬보드',
+        'parameters' : [
+            {
+                'name' : 'X-Http-Token',
+                'description' : '사용자 인증용 헤더 - 관리자만 OK',
+                'in' : 'header',
+                'type' : 'string',
+                'required' : True,
+            }
+        ],
+        'responses' : {
+            '200' : {
+                'description' : '관리자 조회 성공'
+            }
+        }
+    })
     def get(self):
+        """관리자 - 대쉬보드"""
         
         # 탈퇴안한 회원 수는 몇 명? => users 테이블에서 SELECT문
         
