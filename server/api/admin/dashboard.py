@@ -26,15 +26,22 @@ class AdminDashboard(Resource):
             .group_by(Lectures.id)\
             .all() 
             
-        print(group_by_lecture_fee_amount)
+        # print(group_by_lecture_fee_amount)   => JSON응답으로 내려갈 수 없어서, 추가 가공처리가 필요함
         
+        amount_list = []  
         
+        for row in group_by_lecture_fee_amount:
+            amount_list.append({
+                'lecture_title' : row[0],
+                'amount' : int(row[1]),   # db의 합계액은 decimal이라는 특이한 형태로 나오는데, 이걸 int로 가공해줘야함
+            })
         
         return {
             'code' : 200,
             'message' : '임시 응답 : 관리자용 각종 통계 api',
             'data' : {
-                'live_user_count' : users_count
+                'live_user_count' : users_count,
+                'group_by_lecture_fee_amount' : amount_list,
             }
         }
         
