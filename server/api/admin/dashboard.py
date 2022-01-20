@@ -29,6 +29,11 @@ class AdminDashboard(Resource):
         # print(group_by_lecture_fee_amount)   => JSON응답으로 내려갈 수 없어서, 추가 가공처리가 필요함
         amount_list = [{'lecture_title' : row[0], 'amount' : int(row[1])} for row in group_by_lecture_fee_amount ]  
         
+        
+        # 모든 남성 유저 목록을 출력해보기
+        male_users = Users.query.filter(Users.is_male == True).all()
+        print(male_users)
+        
         return {
             'code' : 200,
             'message' : '임시 응답 : 관리자용 각종 통계 api',
