@@ -50,7 +50,7 @@ class AdminDashboard(Resource):
         
         ten_days_ago = now + diff_days  # 10일 전의 날짜를 구했음  >>######### date를 안해줘도 되나..?? 
         
-        print(ten_days_ago) # 2022-01-10 03:06:08.504041 뒤에 초까지 나오는데..
+        print(ten_days_ago) ###### 2022-01-10 03:06:08.504041 뒤에 초까지 나오는데..
                    
         amount_by_date_list = db.session.query(db.func.date(LectureUser.created_at), db.func.sum(Lectures.fee))\
             .filter(Lectures.id == LectureUser.lecture_id)\
@@ -77,7 +77,6 @@ class AdminDashboard(Resource):
             # 매출이 발생한 날이라면? amount 금액을 수정해주자
             for row in amount_by_date_list:
                 # DB 쿼리 결과에서, 이번 날짜와 같은 날짜를 발견했나?
-                ##### 코드를 왜 이렇게 짜???
                 if str(row[0]) == amount_dict['date']:
                     amount_dict['amount'] = int(row[1])
             
