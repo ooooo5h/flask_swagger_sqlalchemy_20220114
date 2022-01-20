@@ -172,6 +172,8 @@ class User(Resource):
         # login_user가 실제로 있는 상황
         # login_user의 password가 실제로 존재한담 => 파라미터의 패스워드를 비교하기만 하면 됨(DB에 추가 쿼리 조회할 필요 없음)
         
+        # login_user.password 기능은 쓸 수가 없음 왜냐!/ 조회할라는 기능은 에러를 발생시키도록 코딩했으니까!
+        
         if login_user.verify_password(args['password']) :
             # 이메일이 맞는 사용자 中 비밀번호와 파라미터의 비밀번호도 같다 => 로그인 성공 처리
             return{
