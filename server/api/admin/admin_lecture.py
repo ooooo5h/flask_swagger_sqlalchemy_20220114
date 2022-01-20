@@ -56,7 +56,7 @@ class AdminLecture(Resource):
     })
     @token_required
     @admin_required
-    def get(self):
+    def post(self):
         """관리자 - 강의 개설"""
         
         args = post_parser.parse_args()
