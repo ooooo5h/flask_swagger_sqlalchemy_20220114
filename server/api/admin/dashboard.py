@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from server.model import Users
+from server.model import Users, LectureUser, Lectures
 
 class AdminDashboard(Resource):
     
@@ -11,10 +11,16 @@ class AdminDashboard(Resource):
         users_count = Users.query.filter(Users.email != 'retired').count()
         
         
-        
         # 연습 - 자바 강의 수강생의 정보 => JOIN을 썼었는데, ORM으로 어떻게 JOIN을 구현하나 
         
-        # java_user_list = Users.query.filter()
+        java_user_list = Users.query\
+            .filter(LectureUser.user_id == Users.id)\
+            .filter(LectureUser.lecture_id == Lectures.id)\
+            .filter(Lectures.title == '자바')\
+            .all()
+            
+        print(java_user_list)
+        
         
         
         return {
