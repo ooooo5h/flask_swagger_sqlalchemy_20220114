@@ -7,6 +7,7 @@ class Lectures(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20), nullable=False)
     campus = db.Column(db.String(10), nullable=False)
+    fee = db.Column(db.Integer, nullable=False, default=0)   # DB(HeidiSQL)에 컬럼 추가했으면 여기서도 추가해야함
     teacher_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     
     teacher = db.relationship('Users')  # 강의의 입장에서, 강사를 찾아가자는 것도 가능하다는 의미에서 남겨둠(정석은 아님)
@@ -19,6 +20,7 @@ class Lectures(db.Model):
             'id' : self.id,
             'title' : self.title,
             'campus' : self.campus,
+            'fee' : self.fee,
             'teacher_id' : self.teacher_id,    
         }
         
