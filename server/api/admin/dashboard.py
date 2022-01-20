@@ -2,6 +2,8 @@ from flask_restful import Resource
 from server.model import Users, LectureUser, Lectures
 from server import db
 
+import datetime
+
 class AdminDashboard(Resource):
     
     def get(self):
@@ -41,9 +43,16 @@ class AdminDashboard(Resource):
         
         
         # 최근 10일(2022-01-10 이후)간의 날짜별 매출 총합
+        # 지금으로부터 10일전은 몇일인가?를 구해서 쿼리에 반영하자
+        now = datetime.datetime.utcnow()  # DB가 표준 시간대를 사용하기 때문에, 계산도 표준시간대 기준으로 하자
+        
+        diff_days = datetime.timedelta(days= -10)  # 10일 이전으로 계산해줄 변수
+        
+        ten_days_ago = now + diff_days  # 10일 전의 날짜를 구했음  >>######### date를 안해줘도 되나..?? 
+                   
         amount_by_date_list = db.session.query(db.func.date(LectureUser.created_at), db.func.sum(Lectures.fee))\
             .filter(Lectures.id == LectureUser.lecture_id)\
-            .filter(LectureUser.created_at > '2022-01-10')\
+            .filter(LectureUser.created_at > ten_days_ago)\
             .group_by(db.func.date(LectureUser.created_at))\
             .all()
             
