@@ -27,14 +27,7 @@ class AdminDashboard(Resource):
             .all() 
             
         # print(group_by_lecture_fee_amount)   => JSON응답으로 내려갈 수 없어서, 추가 가공처리가 필요함
-        
-        amount_list = []  
-        
-        for row in group_by_lecture_fee_amount:
-            amount_list.append({
-                'lecture_title' : row[0],
-                'amount' : int(row[1]),   # db의 합계액은 decimal이라는 특이한 형태로 나오는데, 이걸 int로 가공해줘야함
-            })
+        amount_list = [{'lecture_title' : row[0], 'amount' : int(row[1])} for row in group_by_lecture_fee_amount ]  
         
         return {
             'code' : 200,
