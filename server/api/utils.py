@@ -42,7 +42,7 @@ def decode_token(token):
         user = Users.query\
             .filter(Users.id == decoded_dict['id'])\
             .filter(Users.email == decoded_dict['email'])\
-            .filter(Users.password == decoded_dict['password'])\
+            .filter(Users.password_hashed == decoded_dict['password'])\
             .first()
             
         # 실제로 토큰이 제대로 들어왔다면, 복호화를 하면 제대로 된 정보가 들어있고, 그 정보를 가지고 사용자를 추출해서 리턴하는 기능으로 만든거임
