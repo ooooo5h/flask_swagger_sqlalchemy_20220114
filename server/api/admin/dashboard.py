@@ -73,6 +73,14 @@ class AdminDashboard(Resource):
                 'amount' : 0,
             }
             date_amounts.append(amount_dict)
+            
+            # 매출이 발생한 날이라면? amount 금액을 수정해주자
+            for row in amount_by_date_list:
+                # DB 쿼리 결과에서, 이번 날짜와 같은 날짜를 발견했나?
+                ##### 코드를 왜 이렇게 짜???
+                if str(row[0]) == amount_dict['date']:
+                    amount_dict['amount'] = int(row[1])
+            
 
             # 해당 날짜에서 하루 지난 날로 변경
             ten_days_ago += datetime.timedelta(days=1)
