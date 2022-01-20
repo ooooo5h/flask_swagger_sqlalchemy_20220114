@@ -19,6 +19,7 @@ class Users(db.Model):
     
     birth_year = db.Column(db.Integer, nullable=False, default=1995)    
     is_male = db.Column(db.Boolean, default=False)   # 남성/여성여부를 bool로 표현(0과 1)   
+    is_admin = db.Column(db.Boolean, default=False)  # 관리자 여부를 bool로 표현
     profile_img_url = db.Column(db.String(200))
     # created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now()) # 일반 datetitme.datetime.now()를 하면 현재 작업중인 pc서버의 시간이 기록됨 => DB 현재시간 아님
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
@@ -37,6 +38,7 @@ class Users(db.Model):
             'name' : self.name,
             'phone' : self.phone,
             'birth_year' : self.birth_year,
+            'is_male' : self.is_male,
             'profile_img_url' : f"https://s3.ap-northeast-2.amazonaws.com/neppplus.python.20220118.jeh/{self.profile_img_url}" if self.profile_img_url else None,  # 프사가 있다면 S3주소로 가공해서 내려주고, 없다면 None으로 내려주자
             'created_at' : str(self.created_at),    # SQLAlchemy의 DateTime은 JSON응답 처리 불가 => str으로 변환해서 리턴
             'retired_at' : str(self.retired_at) if self.retired_at else None,
