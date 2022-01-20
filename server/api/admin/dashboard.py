@@ -4,7 +4,7 @@ from flask import g
 from server.model import Users, LectureUser, Lectures
 from server import db
 
-from server.api.utils import token_required
+from server.api.utils import token_required, admin_required
 
 import datetime
 
@@ -29,17 +29,9 @@ class AdminDashboard(Resource):
         }
     })
     @token_required
+    @admin_required
     def get(self):
         """관리자 - 대쉬보드"""
-        
-        # 토큰응로 찾아낸 사용자가 관리자인가?
-        user = g.user
-        
-        if not user.is_admin:
-            return{
-                'code' : 403,
-                'message' : '관리자만 조회가 가능한데, 당신은 노 관리자'
-            }, 403
         
         # 탈퇴안한 회원 수는 몇 명? => users 테이블에서 SELECT문
         
