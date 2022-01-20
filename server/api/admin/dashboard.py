@@ -29,9 +29,10 @@ class AdminDashboard(Resource):
         # print(group_by_lecture_fee_amount)   => JSON응답으로 내려갈 수 없어서, 추가 가공처리가 필요함
         amount_list = [{'lecture_title' : row[0], 'amount' : int(row[1])} for row in group_by_lecture_fee_amount ]  
         
-        
-        # 남성 회원수와 여성 회원수를 가지고, 그룹지어보자...? 이해 100퍼센트 못했음!!
+        #### 이해못했음
+        # 남성 회원수와 여성 회원수 => 조건추가 : 탈퇴하지 않은 사람들만!
         gender_by_user_count_list = db.session.query(Users.is_male, db.func.count(Users.id))\
+            .filter(Users.retired_at == None)\
             .group_by(Users.is_male)\
             .all()
             
