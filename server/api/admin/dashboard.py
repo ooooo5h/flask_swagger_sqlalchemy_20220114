@@ -40,6 +40,22 @@ class AdminDashboard(Resource):
         gender_user_counts = [{'is_male' : row[0], 'user_count' : int(row[1])} for row in gender_by_user_count_list]
         
         
+        # 최근 10일(2022-01-10 이후)간의 날짜별 매출 총합
+        amount_by_date_list = db.session.query(db.func.date(LectureUser.created_at), db.func.sum(Lectures.fee))\
+            .filter(Lectures.id == LectureUser.lecture_id)\
+            .filter(LectureUser.created_at > '2022-01-10')\
+            .group_by(db.func.date(LectureUser.created_at))\
+            .all()
+            
+        date_amounts = []
+        
+        for row in amount_by_date_list:
+            amount_dict = {
+                'date' : str(row[0]),
+                'amount' : int(row[1]),
+            }
+            date_amounts.append(amount_dict)
+        
         return {
             'code' : 200,
             'message' : '임시 응답 : 관리자용 각종 통계 api',
@@ -47,6 +63,7 @@ class AdminDashboard(Resource):
                 'live_user_count' : users_count,
                 'group_by_lecture_fee_amount' : amount_list,
                 'gender_by_user_counts' : gender_user_counts,  
+                'date_amounts' : date_amounts,
             }
         }
         
