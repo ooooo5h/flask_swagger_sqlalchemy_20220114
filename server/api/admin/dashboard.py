@@ -49,6 +49,8 @@ class AdminDashboard(Resource):
         diff_days = datetime.timedelta(days= -10)  # 10일 이전으로 계산해줄 변수
         
         ten_days_ago = now + diff_days  # 10일 전의 날짜를 구했음  >>######### date를 안해줘도 되나..?? 
+        
+        print(ten_days_ago) # 2022-01-10 03:06:08.504041 뒤에 초까지 나오는데..
                    
         amount_by_date_list = db.session.query(db.func.date(LectureUser.created_at), db.func.sum(Lectures.fee))\
             .filter(Lectures.id == LectureUser.lecture_id)\
